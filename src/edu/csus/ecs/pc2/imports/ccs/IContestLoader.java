@@ -1,4 +1,4 @@
-// Copyright (C) 1989-2024 PC2 Development Team: John Clevenger, Douglas Lane, Samir Ashoo, and Troy Boudreau.
+// Copyright (C) 1989-2025 PC2 Development Team: John Clevenger, Douglas Lane, Samir Ashoo, and Troy Boudreau.
 package edu.csus.ecs.pc2.imports.ccs;
 
 import java.io.File;
@@ -257,9 +257,10 @@ public interface IContestLoader {
      * @param directoryName
      *            directory to load files from.
      * @return contest
+     * @throws Exception 
      *
      */
-    IInternalContest fromYaml(IInternalContest contest, String directoryName);
+    IInternalContest fromYaml(IInternalContest contest, String directoryName) throws Exception;
 
     /**
      * Load contest, optionally load problem data files.
@@ -270,12 +271,13 @@ public interface IContestLoader {
      * @param loadDataFileContents
      *            true - load files, false do not load files (files considered external).
      * @return contest
+     * @throws Exception 
      */
-    IInternalContest fromYaml(IInternalContest contest, String directoryName, boolean loadDataFileContents);
+    IInternalContest fromYaml(IInternalContest contest, String directoryName, boolean loadDataFileContents) throws Exception;
 
-    IInternalContest fromYaml(IInternalContest contest, String[] yamlLines, String directoryName);
+    IInternalContest fromYaml(IInternalContest contest, String[] yamlLines, String directoryName) throws Exception;
 
-    IInternalContest fromYaml(IInternalContest contest, String[] yamlLines, String directoryName, boolean loadDataFileContents);
+    IInternalContest fromYaml(IInternalContest contest, String[] yamlLines, String directoryName, boolean loadDataFileContents) throws Exception;
 
     AutoJudgeSetting[] getAutoJudgeSettings(String[] yamlLines, Problem[] problems);
 

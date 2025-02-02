@@ -1,4 +1,4 @@
-// Copyright (C) 1989-2024 PC2 Development Team: John Clevenger, Douglas Lane, Samir Ashoo, and Troy Boudreau.
+// Copyright (C) 1989-2025 PC2 Development Team: John Clevenger, Douglas Lane, Samir Ashoo, and Troy Boudreau.
 package edu.csus.ecs.pc2.imports.ccs;
 
 import java.io.ByteArrayInputStream;
@@ -129,12 +129,12 @@ public class ContestSnakeYAMLLoader implements IContestLoader {
     }
 
     @Override
-    public IInternalContest fromYaml(IInternalContest contest, String directoryName) {
+    public IInternalContest fromYaml(IInternalContest contest, String directoryName) throws Exception {
         return fromYaml(contest, directoryName, true);
     }
 
     @Override
-    public IInternalContest fromYaml(IInternalContest contest, String directoryName, boolean loadDataFileContents) {
+    public IInternalContest fromYaml(IInternalContest contest, String directoryName, boolean loadDataFileContents) throws Exception {
         String[] contents;
         String contestYamlFilename = getContestYamlFilename(directoryName);
         try {
@@ -436,7 +436,7 @@ public class ContestSnakeYAMLLoader implements IContestLoader {
     }
 
     @Override
-    public IInternalContest fromYaml(IInternalContest contest, String[] yamlLines, String directoryName, boolean loadDataFileContents) {
+    public IInternalContest fromYaml(IInternalContest contest, String[] yamlLines, String directoryName, boolean loadDataFileContents) throws Exception {
 
         contest = createContest(contest);
 
@@ -548,16 +548,33 @@ public class ContestSnakeYAMLLoader implements IContestLoader {
         loadDataFileContents = fetchBooleanValue(content, PROBLEM_LOAD_DATA_FILES_KEY, loadDataFileContents);
 
         String shortContestName = fetchValue(content, CLICS_CONTEST_ID);
+
+        // Check if id is CLICS compliant
+        if (!StringUtilities.isEmpty(shortContestName)) {
+            if (!isStringCLICSCompliant(shortContestName)) {
+                throw new Exception(
+                    "ID is not CLICS compliant.\n" +
+                    "Must be:\n" +
+                    "1) Atmost 36 characters in length,\n" + 
+                    "2) Consisting only of characters [`a`-`z`, `A`-`Z`, `0`-`9`, `_`, `-`, `.`],\n" + 
+                    "3) Do not start with `-` or `.`, and\n" + 
+                    "4) Not end with `.`"
+                );
+            }
+        }
+
         // only if CLICS id is not present do we try the key `name`
-        if(shortContestName == null || StringUtilities.isEmpty(shortContestName)) {
+        if (StringUtilities.isEmpty(shortContestName)) {
             shortContestName = fetchValue(content, CLICS_CONTEST_NAME);
+            shortContestName = makeStringCLICSCompliant(shortContestName);
         }
         // only if both CLICS id and key `name` is not present, we try older key `short-name`
-        if(shortContestName == null || StringUtilities.isEmpty(shortContestName)) {
+        if (StringUtilities.isEmpty(shortContestName)) {
             shortContestName = fetchValue(content, SHORT_NAME_KEY);
+            shortContestName = makeStringCLICSCompliant(shortContestName);
         }
         // only set short name if string is present AND not empty
-        if (shortContestName != null && !StringUtilities.isEmpty(shortContestName)) {
+        if (!StringUtilities.isEmpty(shortContestName)) {
             setShortContestNameAndIdentifier(contest, shortContestName);
         } else {
             StaticLog.warning("None of CLICS id, `name` and `short-name` is present. Contest Identifier will be set as Default-{:random_number}.");
@@ -891,6 +908,85 @@ public class ContestSnakeYAMLLoader implements IContestLoader {
 
     }
 
+    /**
+     * Check if id is CLICS compliant i.e.
+     * length atmost 36,
+     * consisting only of characters [`a`-`z`, `A`-`Z`, `0`-`9`, `_`, `-`, `.`],
+     * Not starting with `-` or `.` and
+     * Not ending with `.`
+     * @param shortContestName
+     */
+    private boolean isStringCLICSCompliant(String shortContestName) {
+        int shortContestNameLength = shortContestName.length();
+        if (shortContestNameLength > 36) {
+            return false;
+        }
+        if (
+            !Character.isLetterOrDigit(shortContestName.charAt(0)) && 
+            shortContestName.charAt(0) != '_'
+            ) {
+            return false;
+        }
+        if (
+            !Character.isLetterOrDigit(shortContestName.charAt(shortContestNameLength - 1)) && 
+            shortContestName.charAt(shortContestNameLength - 1) != '_' && 
+            shortContestName.charAt(shortContestNameLength - 1) != '-'
+            ) {
+            return false;
+        }
+        for (int i = 1; i < shortContestNameLength - 1; i++) {
+            if (
+                !Character.isLetterOrDigit(shortContestName.charAt(i)) && 
+                shortContestName.charAt(i) != '_' && 
+                shortContestName.charAt(i) != '-' && 
+                shortContestName.charAt(i) != '.'
+                ) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * Make a string CLICS compliant by
+     * truncating length to 36 if more,
+     * replacing invalid characters with `_`
+     * @param shortContestName
+     */
+    private String makeStringCLICSCompliant(String shortContestName) {
+        if (isStringCLICSCompliant(shortContestName)) {
+            return shortContestName;
+        }
+        
+        if (shortContestName.length() > 36) {
+            shortContestName = shortContestName.substring(0, 36);
+        }
+        int shortContestNameLength = shortContestName.length();
+        if (
+            !Character.isLetterOrDigit(shortContestName.charAt(0)) && 
+            shortContestName.charAt(0) != '_'
+            ) {
+                shortContestName = '_' + shortContestName.substring(1);
+        }
+        if (
+            !Character.isLetterOrDigit(shortContestName.charAt(shortContestNameLength - 1)) && 
+            shortContestName.charAt(shortContestNameLength - 1) != '_' && 
+            shortContestName.charAt(shortContestNameLength - 1) != '-'
+            ) {
+                shortContestName = shortContestName.substring(0, shortContestNameLength - 1) + '_';
+        }
+        for (int i = 1; i < shortContestNameLength - 1; i++) {
+            if (
+                !Character.isLetterOrDigit(shortContestName.charAt(i)) && 
+                shortContestName.charAt(i) != '_' && 
+                shortContestName.charAt(i) != '-' && 
+                shortContestName.charAt(i) != '.'
+                ) {
+                    shortContestName = shortContestName.substring(0, i) + '_' + shortContestName.substring(i + 1);
+            }
+        }
+        return shortContestName;
+    }
 
     /**
      * Generate and write OS password file.
@@ -2575,7 +2671,7 @@ public class ContestSnakeYAMLLoader implements IContestLoader {
     }
 
     @Override
-    public IInternalContest fromYaml(IInternalContest contest, String[] yamlLines, String directoryName) {
+    public IInternalContest fromYaml(IInternalContest contest, String[] yamlLines, String directoryName) throws Exception {
         return fromYaml(contest, yamlLines, directoryName, false);
     }
 
