@@ -16,6 +16,7 @@ import java.util.logging.Level;
 import edu.csus.ecs.pc2.core.IStorage;
 import edu.csus.ecs.pc2.core.ParseArguments;
 import edu.csus.ecs.pc2.core.PermissionGroup;
+import edu.csus.ecs.pc2.core.StringUtilities;
 import edu.csus.ecs.pc2.core.exception.ClarificationUnavailableException;
 import edu.csus.ecs.pc2.core.exception.ContestSecurityException;
 import edu.csus.ecs.pc2.core.exception.ProfileCloneException;
@@ -2672,14 +2673,17 @@ public class InternalContest implements IInternalContest {
         } else {
             updateProfile(profile);
         }
-
         setContestIdentifier(profile.getContestId());
-
     }
 
     @Override
     public void setContestIdentifier(String contestId) {
-        contestIdentifier = contestId;
+        if (contestId != null && !StringUtilities.isEmpty(contestId)) {
+            contestIdentifier = contestId;
+            if (profile != null && !StringUtilities.stringSame(contestId, profile.getContestId())) {
+                profile.setContestId(contestId);
+            }
+        }
     }
 
     @Override

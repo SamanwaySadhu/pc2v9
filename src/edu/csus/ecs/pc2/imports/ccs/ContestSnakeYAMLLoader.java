@@ -548,13 +548,19 @@ public class ContestSnakeYAMLLoader implements IContestLoader {
         loadDataFileContents = fetchBooleanValue(content, PROBLEM_LOAD_DATA_FILES_KEY, loadDataFileContents);
 
         String shortContestName = fetchValue(content, CLICS_CONTEST_ID);
-        // only if CLICS id is not present do we try the older short-name
-        if(shortContestName == null) {
+        // only if CLICS id is not present do we try the key `name`
+        if(shortContestName == null || StringUtilities.isEmpty(shortContestName)) {
+            shortContestName = fetchValue(content, CLICS_CONTEST_NAME);
+        }
+        // only if both CLICS id and key `name` is not present, we try older key `short-name`
+        if(shortContestName == null || StringUtilities.isEmpty(shortContestName)) {
             shortContestName = fetchValue(content, SHORT_NAME_KEY);
         }
         // only set short name if string is present AND not empty
-        if (!StringUtilities.isEmpty(shortContestName)) {
-            setShortContestName(contest, shortContestName);
+        if (shortContestName != null && !StringUtilities.isEmpty(shortContestName)) {
+            setShortContestNameAndIdentifier(contest, shortContestName);
+        } else {
+            StaticLog.warning("None of CLICS id, `name` and `short-name` is present. Contest Identifier will be set as Default-{:random_number}.");
         }
 
         if (null != fetchValue(content, AUTO_STOP_CLOCK_AT_END_KEY)) {
@@ -1103,11 +1109,11 @@ public class ContestSnakeYAMLLoader implements IContestLoader {
 
     }
 
-    private void setShortContestName(IInternalContest contest, String shortContestName) {
+    private void setShortContestNameAndIdentifier(IInternalContest contest, String shortContestName) {
         ContestInformation contestInformation = contest.getContestInformation();
         contestInformation.setContestShortName(shortContestName);
         contest.updateContestInformation(contestInformation);
-
+        contest.setContestIdentifier(shortContestName);
     }
 
     /**
