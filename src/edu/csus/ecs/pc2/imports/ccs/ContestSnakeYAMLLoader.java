@@ -563,21 +563,21 @@ public class ContestSnakeYAMLLoader implements IContestLoader {
             }
         }
 
-        // only if CLICS id is not present do we try the key `name`
-        if (StringUtilities.isEmpty(shortContestName)) {
-            shortContestName = fetchValue(content, CLICS_CONTEST_NAME);
-            shortContestName = makeStringCLICSCompliant(shortContestName);
-        }
-        // only if both CLICS id and key `name` is not present, we try older key `short-name`
+        // only if CLICS id is not present do we try older key `short-name`
         if (StringUtilities.isEmpty(shortContestName)) {
             shortContestName = fetchValue(content, SHORT_NAME_KEY);
+            shortContestName = makeStringCLICSCompliant(shortContestName);
+        }
+        // only if both CLICS id and `short-name` is not present do we try the key `name`
+        if (StringUtilities.isEmpty(shortContestName)) {
+            shortContestName = fetchValue(content, CLICS_CONTEST_NAME);
             shortContestName = makeStringCLICSCompliant(shortContestName);
         }
         // only set short name if string is present AND not empty
         if (!StringUtilities.isEmpty(shortContestName)) {
             setShortContestNameAndIdentifier(contest, shortContestName);
-        } else {
-            StaticLog.warning("None of CLICS id, `name` and `short-name` is present. Contest Identifier will be set as Default-{:random_number}.");
+        } else if (StaticLog.getLog() != null) {
+            StaticLog.warning("None of CLICS id, name and short-name is present. Contest Identifier will be set as Default-{:random_number}.");
         }
 
         if (null != fetchValue(content, AUTO_STOP_CLOCK_AT_END_KEY)) {
@@ -917,16 +917,22 @@ public class ContestSnakeYAMLLoader implements IContestLoader {
      * @param shortContestName
      */
     private boolean isStringCLICSCompliant(String shortContestName) {
+        if (StringUtilities.isEmpty(shortContestName)) {
+            return false;
+        }
+
         int shortContestNameLength = shortContestName.length();
         if (shortContestNameLength > 36) {
             return false;
         }
+
         if (
             !Character.isLetterOrDigit(shortContestName.charAt(0)) && 
             shortContestName.charAt(0) != '_'
             ) {
             return false;
         }
+
         if (
             !Character.isLetterOrDigit(shortContestName.charAt(shortContestNameLength - 1)) && 
             shortContestName.charAt(shortContestNameLength - 1) != '_' && 
@@ -934,6 +940,7 @@ public class ContestSnakeYAMLLoader implements IContestLoader {
             ) {
             return false;
         }
+
         for (int i = 1; i < shortContestNameLength - 1; i++) {
             if (
                 !Character.isLetterOrDigit(shortContestName.charAt(i)) && 
@@ -954,13 +961,14 @@ public class ContestSnakeYAMLLoader implements IContestLoader {
      * @param shortContestName
      */
     private String makeStringCLICSCompliant(String shortContestName) {
-        if (isStringCLICSCompliant(shortContestName)) {
+        if (StringUtilities.isEmpty(shortContestName) || isStringCLICSCompliant(shortContestName)) {
             return shortContestName;
         }
         
         if (shortContestName.length() > 36) {
             shortContestName = shortContestName.substring(0, 36);
         }
+
         int shortContestNameLength = shortContestName.length();
         if (
             !Character.isLetterOrDigit(shortContestName.charAt(0)) && 
@@ -968,6 +976,7 @@ public class ContestSnakeYAMLLoader implements IContestLoader {
             ) {
                 shortContestName = '_' + shortContestName.substring(1);
         }
+
         if (
             !Character.isLetterOrDigit(shortContestName.charAt(shortContestNameLength - 1)) && 
             shortContestName.charAt(shortContestNameLength - 1) != '_' && 
@@ -975,6 +984,7 @@ public class ContestSnakeYAMLLoader implements IContestLoader {
             ) {
                 shortContestName = shortContestName.substring(0, shortContestNameLength - 1) + '_';
         }
+        
         for (int i = 1; i < shortContestNameLength - 1; i++) {
             if (
                 !Character.isLetterOrDigit(shortContestName.charAt(i)) && 

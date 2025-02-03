@@ -1,4 +1,4 @@
-// Copyright (C) 1989-2019 PC2 Development Team: John Clevenger, Douglas Lane, Samir Ashoo, and Troy Boudreau.
+// Copyright (C) 1989-2025 PC2 Development Team: John Clevenger, Douglas Lane, Samir Ashoo, and Troy Boudreau.
 package edu.csus.ecs.pc2.imports.ccs;
 
 import java.io.File;
@@ -172,8 +172,9 @@ public class ICPCTSVLoaderTest extends AbstractTestCase {
      * @param contest
      * @param configDir
      * @return
+     * @throws Exception 
      */
-    private IInternalContest loadYaml(IInternalContest contest, String configDir) {
+    private IInternalContest loadYaml(IInternalContest contest, String configDir) throws Exception {
 
         // startExplorer(configDir);
 

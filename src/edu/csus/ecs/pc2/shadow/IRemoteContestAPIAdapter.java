@@ -1,4 +1,4 @@
-// Copyright (C) 1989-2022 PC2 Development Team: John Clevenger, Douglas Lane, Samir Ashoo, and Troy Boudreau.
+// Copyright (C) 1989-2025 PC2 Development Team: John Clevenger, Douglas Lane, Samir Ashoo, and Troy Boudreau.
 package edu.csus.ecs.pc2.shadow;
 
 import java.io.InputStream;
@@ -33,8 +33,9 @@ public interface IRemoteContestAPIAdapter {
      * </pre>.
      * 
      * @return the configuration of a remote CCS contest
+     * @throws Exception 
      */
-    public RemoteContestConfiguration getRemoteContestConfiguration();
+    public RemoteContestConfiguration getRemoteContestConfiguration() throws Exception;
     
     /**
      * Returns an {@link InputStream} from which CLICS events from a remote

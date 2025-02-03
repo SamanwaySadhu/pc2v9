@@ -1,4 +1,4 @@
-// Copyright (C) 1989-2022 PC2 Development Team: John Clevenger, Douglas Lane, Samir Ashoo, and Troy Boudreau.
+// Copyright (C) 1989-2025 PC2 Development Team: John Clevenger, Douglas Lane, Samir Ashoo, and Troy Boudreau.
 package edu.csus.ecs.pc2.shadow;
 
 import java.io.File;
@@ -63,7 +63,7 @@ public class MockContestAPIAdapter implements IRemoteContestAPIAdapter {
      * {@inheritDoc}
      * 
      */
-    public RemoteContestConfiguration getRemoteContestConfiguration() {
+    public RemoteContestConfiguration getRemoteContestConfiguration() throws Exception {
 
         Map<REMOTE_CONFIGURATION_ELEMENT, List<AbstractRemoteConfigurationObject>> remoteConfigMap = new HashMap<AbstractRemoteConfigurationObject.REMOTE_CONFIGURATION_ELEMENT, List<AbstractRemoteConfigurationObject>>();
 
@@ -82,8 +82,9 @@ public class MockContestAPIAdapter implements IRemoteContestAPIAdapter {
      * @param configDirectory config directory for CDP
      * @param remoteConfigMap map to add to, if null creates a new Map
      * @return
+     * @throws Exception 
      */
-    protected Map<REMOTE_CONFIGURATION_ELEMENT, List<AbstractRemoteConfigurationObject>> loadFileCDPMap(File configDirectory, Map<REMOTE_CONFIGURATION_ELEMENT, List<AbstractRemoteConfigurationObject>> remoteConfigMap) {
+    protected Map<REMOTE_CONFIGURATION_ELEMENT, List<AbstractRemoteConfigurationObject>> loadFileCDPMap(File configDirectory, Map<REMOTE_CONFIGURATION_ELEMENT, List<AbstractRemoteConfigurationObject>> remoteConfigMap) throws Exception {
 
      
         ContestSnakeYAMLLoader loader = new ContestSnakeYAMLLoader();
