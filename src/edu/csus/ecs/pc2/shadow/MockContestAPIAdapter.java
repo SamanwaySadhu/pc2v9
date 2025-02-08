@@ -63,7 +63,7 @@ public class MockContestAPIAdapter implements IRemoteContestAPIAdapter {
      * {@inheritDoc}
      * 
      */
-    public RemoteContestConfiguration getRemoteContestConfiguration() throws Exception {
+    public RemoteContestConfiguration getRemoteContestConfiguration() {
 
         Map<REMOTE_CONFIGURATION_ELEMENT, List<AbstractRemoteConfigurationObject>> remoteConfigMap = new HashMap<AbstractRemoteConfigurationObject.REMOTE_CONFIGURATION_ELEMENT, List<AbstractRemoteConfigurationObject>>();
 
@@ -82,9 +82,8 @@ public class MockContestAPIAdapter implements IRemoteContestAPIAdapter {
      * @param configDirectory config directory for CDP
      * @param remoteConfigMap map to add to, if null creates a new Map
      * @return
-     * @throws Exception 
      */
-    protected Map<REMOTE_CONFIGURATION_ELEMENT, List<AbstractRemoteConfigurationObject>> loadFileCDPMap(File configDirectory, Map<REMOTE_CONFIGURATION_ELEMENT, List<AbstractRemoteConfigurationObject>> remoteConfigMap) throws Exception {
+    protected Map<REMOTE_CONFIGURATION_ELEMENT, List<AbstractRemoteConfigurationObject>> loadFileCDPMap(File configDirectory, Map<REMOTE_CONFIGURATION_ELEMENT, List<AbstractRemoteConfigurationObject>> remoteConfigMap) {
 
      
         ContestSnakeYAMLLoader loader = new ContestSnakeYAMLLoader();

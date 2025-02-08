@@ -83,7 +83,7 @@ public class CLICSContestsTest extends AbstractTestCase {
 
     }
 
-    private IInternalContest loadContest(String cdpPath) throws Exception {
+    private IInternalContest loadContest(String cdpPath) {
 
 //      File cdpConfigDir = new File(cdpPath); 
         File cdpConfigDir = FileUtilities.findCDPConfigDirectory(new File(cdpPath));

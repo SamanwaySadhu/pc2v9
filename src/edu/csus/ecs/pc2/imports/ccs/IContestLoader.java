@@ -257,10 +257,8 @@ public interface IContestLoader {
      * @param directoryName
      *            directory to load files from.
      * @return contest
-     * @throws Exception 
-     *
      */
-    IInternalContest fromYaml(IInternalContest contest, String directoryName) throws Exception;
+    IInternalContest fromYaml(IInternalContest contest, String directoryName);
 
     /**
      * Load contest, optionally load problem data files.
@@ -271,13 +269,12 @@ public interface IContestLoader {
      * @param loadDataFileContents
      *            true - load files, false do not load files (files considered external).
      * @return contest
-     * @throws Exception 
      */
-    IInternalContest fromYaml(IInternalContest contest, String directoryName, boolean loadDataFileContents) throws Exception;
+    IInternalContest fromYaml(IInternalContest contest, String directoryName, boolean loadDataFileContents);
 
-    IInternalContest fromYaml(IInternalContest contest, String[] yamlLines, String directoryName) throws Exception;
+    IInternalContest fromYaml(IInternalContest contest, String[] yamlLines, String directoryName);
 
-    IInternalContest fromYaml(IInternalContest contest, String[] yamlLines, String directoryName, boolean loadDataFileContents) throws Exception;
+    IInternalContest fromYaml(IInternalContest contest, String[] yamlLines, String directoryName, boolean loadDataFileContents);
 
     AutoJudgeSetting[] getAutoJudgeSettings(String[] yamlLines, Problem[] problems);
 

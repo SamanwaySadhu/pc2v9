@@ -3572,7 +3572,7 @@ public class ContestSnakeYAMLLoaderTest extends AbstractTestCase {
         yamlTestTeamDisplayOnBoard(dataDirName, teamDisplayString, expected);
     }
     
-    void yamlTestTeamDisplayOnBoard (String dirname, String teamDisplayString, String expectedString) throws Exception {
+    void yamlTestTeamDisplayOnBoard (String dirname, String teamDisplayString, String expectedString) {
         
         String[] yamlLines = { //
                 "",

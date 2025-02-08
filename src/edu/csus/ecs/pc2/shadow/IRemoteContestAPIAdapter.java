@@ -33,9 +33,8 @@ public interface IRemoteContestAPIAdapter {
      * </pre>.
      * 
      * @return the configuration of a remote CCS contest
-     * @throws Exception 
      */
-    public RemoteContestConfiguration getRemoteContestConfiguration() throws Exception;
+    public RemoteContestConfiguration getRemoteContestConfiguration();
     
     /**
      * Returns an {@link InputStream} from which CLICS events from a remote

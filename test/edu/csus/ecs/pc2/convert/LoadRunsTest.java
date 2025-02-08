@@ -92,10 +92,9 @@ public class LoadRunsTest extends AbstractTestCase {
      * 
      * @param contest
      * @param configDir
-     * @return
-     * @throws Exception 
+     * @return 
      */
-    private IInternalContest loadYaml(IInternalContest contest, String configDir) throws Exception {
+    private IInternalContest loadYaml(IInternalContest contest, String configDir) {
 
         // startExplorer(configDir);
 

@@ -129,12 +129,12 @@ public class ContestSnakeYAMLLoader implements IContestLoader {
     }
 
     @Override
-    public IInternalContest fromYaml(IInternalContest contest, String directoryName) throws Exception {
+    public IInternalContest fromYaml(IInternalContest contest, String directoryName) {
         return fromYaml(contest, directoryName, true);
     }
 
     @Override
-    public IInternalContest fromYaml(IInternalContest contest, String directoryName, boolean loadDataFileContents) throws Exception {
+    public IInternalContest fromYaml(IInternalContest contest, String directoryName, boolean loadDataFileContents) {
         String[] contents;
         String contestYamlFilename = getContestYamlFilename(directoryName);
         try {
@@ -436,7 +436,7 @@ public class ContestSnakeYAMLLoader implements IContestLoader {
     }
 
     @Override
-    public IInternalContest fromYaml(IInternalContest contest, String[] yamlLines, String directoryName, boolean loadDataFileContents) throws Exception {
+    public IInternalContest fromYaml(IInternalContest contest, String[] yamlLines, String directoryName, boolean loadDataFileContents) {
 
         contest = createContest(contest);
 
@@ -552,7 +552,7 @@ public class ContestSnakeYAMLLoader implements IContestLoader {
         // Check if id is CLICS compliant
         if (!StringUtilities.isEmpty(shortContestName)) {
             if (!isStringCLICSCompliant(shortContestName)) {
-                throw new Exception(
+                throw new YamlLoadException(
                     "ID is not CLICS compliant.\n" +
                     "Must be:\n" +
                     "1) Atmost 36 characters in length,\n" + 
@@ -2681,7 +2681,7 @@ public class ContestSnakeYAMLLoader implements IContestLoader {
     }
 
     @Override
-    public IInternalContest fromYaml(IInternalContest contest, String[] yamlLines, String directoryName) throws Exception {
+    public IInternalContest fromYaml(IInternalContest contest, String[] yamlLines, String directoryName) {
         return fromYaml(contest, yamlLines, directoryName, false);
     }
 
