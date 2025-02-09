@@ -508,6 +508,16 @@ public final class StringUtilities implements Serializable {
     }
 
     /**
+     * Helper function to check if character belongs to CLICS compliant character set
+     * @param ch
+     * @param checkHyphen
+     * @param checkDot
+     */
+    private static boolean isCharInCLICSCompliantSet(char ch, boolean checkHyphen, boolean checkDot) {
+        return Character.isLetterOrDigit(ch) || ch == '_' || (checkHyphen && ch == '-') || (checkDot && ch == '.');
+    }
+
+    /**
      * Check if id is CLICS compliant i.e.
      * length atmost 36,
      * consisting only of characters [`a`-`z`, `A`-`Z`, `0`-`9`, `_`, `-`, `.`],
@@ -525,28 +535,19 @@ public final class StringUtilities implements Serializable {
             return false;
         }
 
-        if (
-            !Character.isLetterOrDigit(shortContestName.charAt(0)) && 
-            shortContestName.charAt(0) != '_'
-            ) {
+        char firstChar = shortContestName.charAt(0);
+        char lastChar = shortContestName.charAt(shortContestNameLength - 1);
+        if (!isCharInCLICSCompliantSet(firstChar, false, false)) {
             return false;
         }
 
-        if (
-            !Character.isLetterOrDigit(shortContestName.charAt(shortContestNameLength - 1)) && 
-            shortContestName.charAt(shortContestNameLength - 1) != '_' && 
-            shortContestName.charAt(shortContestNameLength - 1) != '-'
-            ) {
+        if (!isCharInCLICSCompliantSet(lastChar, true, false)) {
             return false;
         }
 
         for (int i = 1; i < shortContestNameLength - 1; i++) {
-            if (
-                !Character.isLetterOrDigit(shortContestName.charAt(i)) && 
-                shortContestName.charAt(i) != '_' && 
-                shortContestName.charAt(i) != '-' && 
-                shortContestName.charAt(i) != '.'
-                ) {
+            char ch = shortContestName.charAt(i);
+            if (!isCharInCLICSCompliantSet(lastChar, true, true)) {
                 return false;
             }
         }
@@ -567,31 +568,22 @@ public final class StringUtilities implements Serializable {
         if (shortContestName.length() > MAX_CLICS_ID_LENGTH) {
             shortContestName = shortContestName.substring(0, MAX_CLICS_ID_LENGTH);
         }
-
+        
         int shortContestNameLength = shortContestName.length();
-        if (
-            !Character.isLetterOrDigit(shortContestName.charAt(0)) && 
-            shortContestName.charAt(0) != '_'
-            ) {
-                shortContestName = '_' + shortContestName.substring(1);
+        char firstChar = shortContestName.charAt(0);
+        char lastChar = shortContestName.charAt(shortContestNameLength - 1);
+        if (!isCharInCLICSCompliantSet(firstChar, false, false)) {
+            shortContestName = '_' + shortContestName.substring(1);
         }
 
-        if (
-            !Character.isLetterOrDigit(shortContestName.charAt(shortContestNameLength - 1)) && 
-            shortContestName.charAt(shortContestNameLength - 1) != '_' && 
-            shortContestName.charAt(shortContestNameLength - 1) != '-'
-            ) {
-                shortContestName = shortContestName.substring(0, shortContestNameLength - 1) + '_';
+        if (!isCharInCLICSCompliantSet(lastChar, true, false)) {
+            shortContestName = shortContestName.substring(0, shortContestNameLength - 1) + '_';
         }
         
         for (int i = 1; i < shortContestNameLength - 1; i++) {
-            if (
-                !Character.isLetterOrDigit(shortContestName.charAt(i)) && 
-                shortContestName.charAt(i) != '_' && 
-                shortContestName.charAt(i) != '-' && 
-                shortContestName.charAt(i) != '.'
-                ) {
-                    shortContestName = shortContestName.substring(0, i) + '_' + shortContestName.substring(i + 1);
+            char ch = shortContestName.charAt(i);
+            if (!isCharInCLICSCompliantSet(lastChar, true, true)) {
+                shortContestName = shortContestName.substring(0, i) + '_' + shortContestName.substring(i + 1);
             }
         }
         return shortContestName;
