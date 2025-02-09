@@ -13,14 +13,15 @@ import java.util.List;
 
 public final class StringUtilities implements Serializable {
 
-    /**
-     *
-     */
     private static final long serialVersionUID = -4197938292232525730L;
     /**
      * A constant containing three dots.
      */
     private static final String ELLIPSIS = "...";
+    /**
+     * A constant storing the maximum length of a CLICS id
+     */
+    private static final int MAX_CLICS_ID_LENGTH = 36;
 
     private StringUtilities() {
         super();
@@ -520,7 +521,7 @@ public final class StringUtilities implements Serializable {
         }
 
         int shortContestNameLength = shortContestName.length();
-        if (shortContestNameLength > 36) {
+        if (shortContestNameLength > MAX_CLICS_ID_LENGTH) {
             return false;
         }
 
@@ -563,8 +564,8 @@ public final class StringUtilities implements Serializable {
             return shortContestName;
         }
         
-        if (shortContestName.length() > 36) {
-            shortContestName = shortContestName.substring(0, 36);
+        if (shortContestName.length() > MAX_CLICS_ID_LENGTH) {
+            shortContestName = shortContestName.substring(0, MAX_CLICS_ID_LENGTH);
         }
 
         int shortContestNameLength = shortContestName.length();
