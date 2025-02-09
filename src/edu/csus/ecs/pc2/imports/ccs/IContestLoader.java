@@ -257,7 +257,7 @@ public interface IContestLoader {
      * @param directoryName
      *            directory to load files from.
      * @return contest
-     * 
+     *
      */
     IInternalContest fromYaml(IInternalContest contest, String directoryName);
 

@@ -561,10 +561,8 @@ public class ContestSnakeYAMLLoader implements IContestLoader {
                     "4) Not end with `.`"
                 );
             }
-        }
-
-        // only if CLICS id is not present do we try older key `short-name`
-        if (StringUtilities.isEmpty(shortContestName)) {
+        } else {
+            // only if CLICS id is not present do we try older key `short-name`
             shortContestName = fetchValue(content, SHORT_NAME_KEY);
             shortContestName = makeStringCLICSCompliant(shortContestName);
         }
