@@ -505,4 +505,94 @@ public final class StringUtilities implements Serializable {
         else
             return aLength - bLength;
     }
+
+    /**
+     * Check if id is CLICS compliant i.e.
+     * length atmost 36,
+     * consisting only of characters [`a`-`z`, `A`-`Z`, `0`-`9`, `_`, `-`, `.`],
+     * Not starting with `-` or `.` and
+     * Not ending with `.`
+     * @param shortContestName
+     */
+    public static boolean isStringCLICSCompliant(String shortContestName) {
+        if (isEmpty(shortContestName)) {
+            return false;
+        }
+
+        int shortContestNameLength = shortContestName.length();
+        if (shortContestNameLength > 36) {
+            return false;
+        }
+
+        if (
+            !Character.isLetterOrDigit(shortContestName.charAt(0)) && 
+            shortContestName.charAt(0) != '_'
+            ) {
+            return false;
+        }
+
+        if (
+            !Character.isLetterOrDigit(shortContestName.charAt(shortContestNameLength - 1)) && 
+            shortContestName.charAt(shortContestNameLength - 1) != '_' && 
+            shortContestName.charAt(shortContestNameLength - 1) != '-'
+            ) {
+            return false;
+        }
+
+        for (int i = 1; i < shortContestNameLength - 1; i++) {
+            if (
+                !Character.isLetterOrDigit(shortContestName.charAt(i)) && 
+                shortContestName.charAt(i) != '_' && 
+                shortContestName.charAt(i) != '-' && 
+                shortContestName.charAt(i) != '.'
+                ) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * Make a string CLICS compliant by
+     * truncating length to 36 if more,
+     * replacing invalid characters with `_`
+     * @param shortContestName
+     */
+    public static String makeStringCLICSCompliant(String shortContestName) {
+        if (isEmpty(shortContestName) || isStringCLICSCompliant(shortContestName)) {
+            return shortContestName;
+        }
+        
+        if (shortContestName.length() > 36) {
+            shortContestName = shortContestName.substring(0, 36);
+        }
+
+        int shortContestNameLength = shortContestName.length();
+        if (
+            !Character.isLetterOrDigit(shortContestName.charAt(0)) && 
+            shortContestName.charAt(0) != '_'
+            ) {
+                shortContestName = '_' + shortContestName.substring(1);
+        }
+
+        if (
+            !Character.isLetterOrDigit(shortContestName.charAt(shortContestNameLength - 1)) && 
+            shortContestName.charAt(shortContestNameLength - 1) != '_' && 
+            shortContestName.charAt(shortContestNameLength - 1) != '-'
+            ) {
+                shortContestName = shortContestName.substring(0, shortContestNameLength - 1) + '_';
+        }
+        
+        for (int i = 1; i < shortContestNameLength - 1; i++) {
+            if (
+                !Character.isLetterOrDigit(shortContestName.charAt(i)) && 
+                shortContestName.charAt(i) != '_' && 
+                shortContestName.charAt(i) != '-' && 
+                shortContestName.charAt(i) != '.'
+                ) {
+                    shortContestName = shortContestName.substring(0, i) + '_' + shortContestName.substring(i + 1);
+            }
+        }
+        return shortContestName;
+    }
 }

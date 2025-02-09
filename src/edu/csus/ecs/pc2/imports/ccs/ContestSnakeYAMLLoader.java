@@ -551,7 +551,7 @@ public class ContestSnakeYAMLLoader implements IContestLoader {
 
         // Check if id is CLICS compliant
         if (!StringUtilities.isEmpty(shortContestName)) {
-            if (!isStringCLICSCompliant(shortContestName)) {
+            if (!StringUtilities.isStringCLICSCompliant(shortContestName)) {
                 throw new YamlLoadException(
                     "ID is not CLICS compliant.\n" +
                     "Must be:\n" +
@@ -564,12 +564,13 @@ public class ContestSnakeYAMLLoader implements IContestLoader {
         } else {
             // only if CLICS id is not present do we try older key `short-name`
             shortContestName = fetchValue(content, SHORT_NAME_KEY);
-            shortContestName = makeStringCLICSCompliant(shortContestName);
+            shortContestName = StringUtilities.makeStringCLICSCompliant(shortContestName);
         }
+        
         // only if both CLICS id and `short-name` is not present do we try the key `name`
         if (StringUtilities.isEmpty(shortContestName)) {
             shortContestName = fetchValue(content, CLICS_CONTEST_NAME);
-            shortContestName = makeStringCLICSCompliant(shortContestName);
+            shortContestName = StringUtilities.makeStringCLICSCompliant(shortContestName);
         }
         // only set short name if string is present AND not empty
         if (!StringUtilities.isEmpty(shortContestName)) {
@@ -904,96 +905,6 @@ public class ContestSnakeYAMLLoader implements IContestLoader {
 
         return contest;
 
-    }
-
-    /**
-     * Check if id is CLICS compliant i.e.
-     * length atmost 36,
-     * consisting only of characters [`a`-`z`, `A`-`Z`, `0`-`9`, `_`, `-`, `.`],
-     * Not starting with `-` or `.` and
-     * Not ending with `.`
-     * @param shortContestName
-     */
-    private boolean isStringCLICSCompliant(String shortContestName) {
-        if (StringUtilities.isEmpty(shortContestName)) {
-            return false;
-        }
-
-        int shortContestNameLength = shortContestName.length();
-        if (shortContestNameLength > 36) {
-            return false;
-        }
-
-        if (
-            !Character.isLetterOrDigit(shortContestName.charAt(0)) && 
-            shortContestName.charAt(0) != '_'
-            ) {
-            return false;
-        }
-
-        if (
-            !Character.isLetterOrDigit(shortContestName.charAt(shortContestNameLength - 1)) && 
-            shortContestName.charAt(shortContestNameLength - 1) != '_' && 
-            shortContestName.charAt(shortContestNameLength - 1) != '-'
-            ) {
-            return false;
-        }
-
-        for (int i = 1; i < shortContestNameLength - 1; i++) {
-            if (
-                !Character.isLetterOrDigit(shortContestName.charAt(i)) && 
-                shortContestName.charAt(i) != '_' && 
-                shortContestName.charAt(i) != '-' && 
-                shortContestName.charAt(i) != '.'
-                ) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    /**
-     * Make a string CLICS compliant by
-     * truncating length to 36 if more,
-     * replacing invalid characters with `_`
-     * @param shortContestName
-     */
-    private String makeStringCLICSCompliant(String shortContestName) {
-        if (StringUtilities.isEmpty(shortContestName) || isStringCLICSCompliant(shortContestName)) {
-            return shortContestName;
-        }
-        
-        if (shortContestName.length() > 36) {
-            shortContestName = shortContestName.substring(0, 36);
-        }
-
-        int shortContestNameLength = shortContestName.length();
-        if (
-            !Character.isLetterOrDigit(shortContestName.charAt(0)) && 
-            shortContestName.charAt(0) != '_'
-            ) {
-                shortContestName = '_' + shortContestName.substring(1);
-        }
-
-        if (
-            !Character.isLetterOrDigit(shortContestName.charAt(shortContestNameLength - 1)) && 
-            shortContestName.charAt(shortContestNameLength - 1) != '_' && 
-            shortContestName.charAt(shortContestNameLength - 1) != '-'
-            ) {
-                shortContestName = shortContestName.substring(0, shortContestNameLength - 1) + '_';
-        }
-        
-        for (int i = 1; i < shortContestNameLength - 1; i++) {
-            if (
-                !Character.isLetterOrDigit(shortContestName.charAt(i)) && 
-                shortContestName.charAt(i) != '_' && 
-                shortContestName.charAt(i) != '-' && 
-                shortContestName.charAt(i) != '.'
-                ) {
-                    shortContestName = shortContestName.substring(0, i) + '_' + shortContestName.substring(i + 1);
-            }
-        }
-        return shortContestName;
     }
 
     /**
