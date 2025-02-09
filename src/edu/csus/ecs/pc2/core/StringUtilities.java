@@ -547,7 +547,7 @@ public final class StringUtilities implements Serializable {
 
         for (int i = 1; i < shortContestNameLength - 1; i++) {
             char ch = shortContestName.charAt(i);
-            if (!isCharInCLICSCompliantSet(lastChar, true, true)) {
+            if (!isCharInCLICSCompliantSet(ch, true, true)) {
                 return false;
             }
         }
@@ -582,7 +582,7 @@ public final class StringUtilities implements Serializable {
         
         for (int i = 1; i < shortContestNameLength - 1; i++) {
             char ch = shortContestName.charAt(i);
-            if (!isCharInCLICSCompliantSet(lastChar, true, true)) {
+            if (!isCharInCLICSCompliantSet(ch, true, true)) {
                 shortContestName = shortContestName.substring(0, i) + '_' + shortContestName.substring(i + 1);
             }
         }
